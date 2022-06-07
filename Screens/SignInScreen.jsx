@@ -1,12 +1,10 @@
-import React, {useState, useContext, createContext, useMemo} from 'react'
-import {Image, Text, View, TouchableOpacity, TextInput} from 'react-native'
+import React, {useContext, useState} from 'react'
+import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import logo from '../assets/images/logo-full.png'
 import {styles} from '../styles/sign-in'
 import {Alert} from "../Components/Alert";
 import {useDispatch, useSelector} from "react-redux";
-import {SafeAreaView} from "react-native-web";
 import Spinner from 'react-native-loading-spinner-overlay'
-import {UpdateIsErr} from "../features/authStore";
 
 export const SignInScreen = ({route, navigation,authContext}) => {
 

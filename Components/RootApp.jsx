@@ -1,10 +1,19 @@
-import {Provider, useDispatch, useSelector} from "react-redux";
-import {createContext, useEffect, useMemo, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {createContext, useEffect, useMemo} from "react";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {BeforeSignIn, RestoreToken, SignIn, SignInFailed, SignOut, SignUp} from "../features/authStore";
-import {NavigationContainer} from "@react-navigation/native";
+import {NavigationContainer, useNavigation} from "@react-navigation/native";
 import {SignInScreen} from "../Screens/SignInScreen";
+import {CategoriesScreen} from "../Screens/CategoriesScreen";
+import {ProductsScreen} from "../Screens/ProductsScreen";
+import {CartScreen} from "../Screens/CartScreen";
+import {ProfileScreen} from "../Screens/ProfileScreen";
 import {HomeScreen} from "../Screens/HomeScreen";
+import {LayoutScreen} from "../Screens/LayoutScreen";
+import {ProductDetail} from "../Screens/ProductDetail";
+import {TouchableOpacity} from "react-native";
+import {Ionicons} from "@expo/vector-icons";
+
 
 export const RootApp = () => {
     // get state by Auth reducer
@@ -33,6 +42,7 @@ export const RootApp = () => {
             } catch (e) {
                 console.log(e)
             }
+            userToken = 'dummy_token'
             authDispatch(RestoreToken({token: userToken}))
         }
         bootstrapAsync();
@@ -88,32 +98,70 @@ export const RootApp = () => {
         }
     }), [])
 
+    // layout page
+
     return (
         <AuthContext.Provider value={authContext}>
             <NavigationContainer>
-                <Stack.Navigator>
-                    {
-                        authenticators.userToken == null
-                            ?
-                            (
-                                <Stack.Screen name={'sign_in'} options={{
-                                    title: "",
-                                    headerShown: false,
-                                    headerBackButtonMenuEnabled: false
-                                }}>
-                                    {(props) => <SignInScreen authContext={AuthContext}  {...props}/>}
-                                </Stack.Screen>
-                            )
-                            :
-                            (<Stack.Screen name={"home"} options={{
-                                title: "",
-                                headerBackButtonMenuEnabled: false,
-                                headerShown: false
-                            }}>
-                                {(props) => <HomeScreen authContext={AuthContext}  {...props}/>}
-                            </Stack.Screen>)
-                    }
-                </Stack.Navigator>
+                <LayoutScreen authContext={AuthContext}>
+                    <Stack.Navigator>
+                        {
+                            authenticators.userToken == null
+                                ?
+                                (
+                                    <Stack.Screen name={'sign_in'} options={{
+                                        title: "",
+                                        headerShown: false,
+                                        headerBackButtonMenuEnabled: false
+                                    }}>
+                                        {(props) => <SignInScreen authContext={AuthContext}  {...props}/>}
+                                    </Stack.Screen>
+                                )
+                                :
+
+                                <Stack.Group>
+                                    <Stack.Screen name={"home"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: false,
+                                        headerShown: false
+                                    }}>
+                                        {(props) => <HomeScreen authContext={AuthContext}  {...props}/>}
+                                    </Stack.Screen>
+                                    <Stack.Screen name={"categories"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: false,
+                                        headerShown: false
+                                    }} component={CategoriesScreen}>
+                                    </Stack.Screen>
+                                    <Stack.Screen name={"products"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: false,
+                                        headerShown: false
+                                    }} component={ProductsScreen}>
+                                    </Stack.Screen>
+                                    <Stack.Screen name={"cart"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: false,
+                                        headerShown: false
+                                    }} component={CartScreen}>
+                                    </Stack.Screen>
+                                    <Stack.Screen name={"profile"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: false,
+                                        headerShown: false
+                                    }} component={ProfileScreen}>
+                                    </Stack.Screen>
+                                    <Stack.Screen name={"product_detail"} options={{
+                                        title: "",
+                                        headerBackButtonMenuEnabled: true,
+                                        headerShown: true,
+
+                                    }} component={ProductDetail}>
+                                    </Stack.Screen>
+                                </Stack.Group>
+                        }
+                    </Stack.Navigator>
+                </LayoutScreen>
             </NavigationContainer>
         </AuthContext.Provider>
     );
