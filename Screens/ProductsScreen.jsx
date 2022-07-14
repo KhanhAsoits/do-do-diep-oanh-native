@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native'
+import {SafeAreaView, ScrollView} from 'react-native'
 import {Products} from "../Components/Products";
 import categoryBg from "../assets/images/category-1.png";
 import product1 from "../assets/images/product.png";
@@ -6,6 +6,8 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useFocusEffect} from "@react-navigation/native";
 import {ToggleHeader} from "../features/layoutStore";
+import {Header} from "../Components/Header";
+import {Navbar} from "../Components/Navbar";
 
 export const ProductsScreen = () => {
     const initProducts = [
@@ -97,9 +99,14 @@ export const ProductsScreen = () => {
         dispatch(ToggleHeader({header: true}))
     })
     return (
-        <ScrollView>
-            <Products products={products}></Products>
-        </ScrollView>
+        <SafeAreaView style={{flex:1}}>
+            <Header></Header>
+            <ScrollView>
+                <Products products={products}></Products>
+            </ScrollView>
+            <Navbar></Navbar>
+        </SafeAreaView>
+
     )
 }
 

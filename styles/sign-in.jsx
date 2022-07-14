@@ -7,15 +7,16 @@ export const styles = StyleSheet.create({
         backgroundColor:"#661013",
         textAlign:"center",
         justifyContent:"center",
-        padding:36,
+        paddingVertical:36,
+        paddingHorizontal:12,
         flex:1,
     },
     input:{
         paddingHorizontal:20,
-        paddingVertical:10,
+        paddingVertical:9,
         fontSize:14,
         fontWeight:"500",
-        marginVertical:10,
+        marginVertical:8,
         borderRadius:6,
         borderWidth:1,
         backgroundColor:"#fff",
@@ -38,9 +39,9 @@ export const styles = StyleSheet.create({
     },
     btn_login:{
         marginVertical:12,
-        marginHorizontal:50,
+        marginHorizontal:60,
         backgroundColor:"#B0171C",
-        paddingVertical:16,
+        paddingVertical:12,
         borderRadius:6
     }
 })

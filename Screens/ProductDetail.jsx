@@ -1,4 +1,4 @@
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback} from "react";
 import {format} from "../Components/ProductItem";
@@ -9,6 +9,8 @@ import {useFocusEffect} from "@react-navigation/native";
 import {ToggleHeader} from "../features/layoutStore";
 import { Ionicons } from '@expo/vector-icons';
 import {Touchable} from "react-native-web";
+import {Header} from "../Components/Header";
+import {Navbar} from "../Components/Navbar";
 export const ProductDetail = ({navigation, route}) => {
 
     const dispatch = useDispatch()
@@ -186,31 +188,34 @@ export const ProductDetail = ({navigation, route}) => {
 
     const product = route.params.product
     return (
-        <ScrollView style={styles.container}>
-            <Image source={product.image} style={styles.productImage}/>
-            <View style={styles.detailContainer}>
-                <Text style={styles.productName}>{product.name}</Text>
-                <Text style={styles.productPrice}>{format(product.price)} VND</Text>
-                <View style={styles.describleContainer}>
-                    <Text style={[styles.font20, styles.textUpperCase]}>Chi TIẾT SẢN PHẨM</Text>
-                    <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 14}]}>danh mục :
-                        <Text style={[styles.textInfo, styles.fwBold, styles.font12]}> {product.category.title}</Text>
-                    </Text>
-                    <Text style={[styles.font12, styles.fwBold, styles.textUpperCase]}>mô tả :
-                    </Text>
-                    <Text style={[styles.font12, styles.fwBold, styles.textUpperCase]}>
-                        {product.detail}
-                    </Text>
-                    <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 8}]}>kích thước:
-                        <Text style={[styles.font12, styles.fwNormal]}> {product.size}</Text>
-                    </Text>
-                    <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 8}]}>chất liệu:
-                        <Text style={[styles.font12, styles.fwNormal]}> {product.material}</Text>
-                    </Text>
+        <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.container}>
+                <Image source={product.image} style={styles.productImage}/>
+                <View style={styles.detailContainer}>
+                    <Text style={styles.productName}>{product.name}</Text>
+                    <Text style={styles.productPrice}>{format(product.price)} VND</Text>
+                    <View style={styles.describleContainer}>
+                        <Text style={[styles.font20, styles.textUpperCase]}>Chi TIẾT SẢN PHẨM</Text>
+                        <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 14}]}>danh mục :
+                            <Text style={[styles.textInfo, styles.fwBold, styles.font12]}> {product.category.title}</Text>
+                        </Text>
+                        <Text style={[styles.font12, styles.fwBold, styles.textUpperCase]}>mô tả :
+                        </Text>
+                        <Text style={[styles.font12, styles.fwBold, styles.textUpperCase]}>
+                            {product.detail}
+                        </Text>
+                        <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 8}]}>kích thước:
+                            <Text style={[styles.font12, styles.fwNormal]}> {product.size}</Text>
+                        </Text>
+                        <Text style={[styles.font12, styles.textUpperCase, styles.fwBold, {marginVertical: 8}]}>chất liệu:
+                            <Text style={[styles.font12, styles.fwNormal]}> {product.material}</Text>
+                        </Text>
+                    </View>
                 </View>
-            </View>
-            <Products title={"Sản Phẩm Cùng Loại"} products={productOfCategories}></Products>
-        </ScrollView>
+                <Products title={"Sản Phẩm Cùng Loại"} products={productOfCategories}></Products>
+            </ScrollView>
+            <Navbar></Navbar>
+        </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({

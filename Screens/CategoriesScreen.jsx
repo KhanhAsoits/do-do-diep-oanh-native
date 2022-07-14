@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native'
+import {Image, SafeAreaView, ScrollView, View} from 'react-native'
 import categoryBg from "../assets/images/category-1.png";
 import categoryBg2 from "../assets/images/category-2.png";
 import categoryBg3 from "../assets/images/category-3.png";
@@ -8,6 +8,10 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useFocusEffect} from "@react-navigation/native";
 import {ToggleHeader} from "../features/layoutStore";
+import {Header} from "../Components/Header";
+import banner from "../assets/images/header-banner.png";
+import {Products} from "../Components/Products";
+import {Navbar} from "../Components/Navbar";
 
 export const CategoriesScreen = () => {
     const initCategories = [
@@ -111,12 +115,14 @@ export const CategoriesScreen = () => {
     const [categories, setCategories] = useState(initCategories)
     const dispatch = useDispatch()
 
-    useFocusEffect(() => {
-        dispatch(ToggleHeader({header: true}))
-    })
+
     return (
-        <ScrollView>
-            <Categories categories={categories}></Categories>
-        </ScrollView>
+        <SafeAreaView style={{flex:1}}>
+            <Header></Header>
+            <ScrollView>
+                <Categories categories={categories}></Categories>
+            </ScrollView>
+            <Navbar></Navbar>
+        </SafeAreaView>
     )
 }

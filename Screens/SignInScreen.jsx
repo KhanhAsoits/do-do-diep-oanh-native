@@ -9,7 +9,6 @@ import Spinner from 'react-native-loading-spinner-overlay'
 export const SignInScreen = ({route, navigation,authContext}) => {
 
     const authenticator = useSelector(state => state.authenticate)
-    const authDispatch = useDispatch()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
@@ -22,7 +21,7 @@ export const SignInScreen = ({route, navigation,authContext}) => {
     return (
         <View style={styles.container}>
             <Spinner visible={authenticator.isLoading}/>
-            {!!authenticator.isErr && <Alert message={"Tài khoản hoặc mật khẩu không chính xác"}/>}
+            {!!authenticator.isErr && <Alert message={authenticator.errMsg}/>}
             <View style={styles.image_box}>
                 <Image source={logo} style={styles.logo}/>
             </View>

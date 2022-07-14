@@ -1,4 +1,4 @@
-import {Image, ScrollView, StyleSheet, View} from 'react-native'
+import {Image, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native'
 import {useContext, useState} from "react";
 import banner from '../assets/images/header-banner.png'
 import categoryBg from '../assets/images/category-1.png'
@@ -11,6 +11,8 @@ import {Products} from "../Components/Products";
 import {useDispatch, useSelector} from "react-redux";
 import {ToggleHeader} from "../features/layoutStore";
 import {useFocusEffect} from "@react-navigation/native";
+import {Header} from "../Components/Header";
+import {Navbar} from "../Components/Navbar";
 
 export const HomeScreen = ({route, navigation, authContext}) => {
 
@@ -191,17 +193,20 @@ export const HomeScreen = ({route, navigation, authContext}) => {
         signOut()
     }
     return (
-
-        <ScrollView style={styles.mainBody}>
-            <View style={styles.body}>
-                {/*banner*/}
-                <View style={styles.imgBox}>
-                    <Image source={banner} style={styles.banner}/>
+        <SafeAreaView style={styles.container}>
+            <Header></Header>
+            <ScrollView style={styles.mainBody}>
+                <View style={styles.body}>
+                    {/*banner*/}
+                    <View style={styles.imgBox}>
+                        <Image source={banner} style={styles.banner}/>
+                    </View>
+                    <Categories categories={categories} title={'Danh Mục Sản Phẩm'}></Categories>
+                    <Products products={products} title={"Sản Phẩm Nổi Bật"}></Products>
                 </View>
-                <Categories categories={categories} title={'Danh Mục Sản Phẩm'}></Categories>
-                <Products products={products} title={"Sản Phẩm Nổi Bật"}></Products>
-            </View>
-        </ScrollView>
+            </ScrollView>
+            <Navbar></Navbar>
+        </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({

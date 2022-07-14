@@ -6,12 +6,10 @@ import {useEffect} from "react";
 import {ToggleHeader} from "../features/layoutStore";
 
 export const LayoutScreen = (props) => {
-    const layoutReducer = useSelector((state) => state.layoutReducer)
     return (
         <SafeAreaView style={styles.container}>
-            {layoutReducer.header && <Header></Header>}
-            {props.children}
-            {layoutReducer.navbar && <Navbar></Navbar>}
+            <Header></Header>
+            <Navbar></Navbar>
         </SafeAreaView>
     )
 

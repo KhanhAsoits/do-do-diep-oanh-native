@@ -13,7 +13,10 @@ import {LayoutScreen} from "../Screens/LayoutScreen";
 import {ProductDetail} from "../Screens/ProductDetail";
 import {TouchableOpacity} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
-
+import {loginAPI} from "../API/AuthAPI";
+import {validateEmail} from "../helpers/email";
+import * as LocalStorage from 'expo-secure-store'
+import {restore_token} from "../API/BaseAPI";
 
 export const RootApp = () => {
     // get state by Auth reducer
@@ -30,20 +33,18 @@ export const RootApp = () => {
     // useEffect TO GET USER TOKEN IN LOCAL
 
     useEffect(() => {
-
         const bootstrapAsync = async () => {
             let userToken = null
             try {
-                if (authenticators.hasOwnProperty('userToken')) {
-                    if (userToken == null) {
-                        userToken = authenticators.userToken
-                    }
+                authDispatch(BeforeSignIn())
+                let token = await LocalStorage.getItemAsync('api_token') || null
+                if (token){
+                    userToken = token
                 }
+                authDispatch(RestoreToken({token: userToken}))
             } catch (e) {
                 console.log(e)
             }
-            userToken = 'dummy_token'
-            authDispatch(RestoreToken({token: userToken}))
         }
         bootstrapAsync();
     }, [])
@@ -64,32 +65,45 @@ export const RootApp = () => {
                 const wait = () => {
                     return new Promise(resolve => setTimeout(resolve, 2000))
                 }
-                const fetchUser = async (username, password) => {
-                    await wait()
-                    return username === 'khanhdaica' && password === '12345678';
+                const fetchUser = async (email, password) => {
+                    try {
+                        await wait()
+                        let res = await loginAPI(email, password)
+                        console.log(res.toString())
+                        if (res){
+                            await restore_token(res.token)
+                            userToken = res.token
+                        }else {
+                            authDispatch(SignInFailed({isErr:true,msg:'Tai Khoan Hoac Mat Khau Khong Chinh Xac'}))
+                        }
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
-
-                let username, password;
+                let email, password;
 
                 if (data.hasOwnProperty('username') && data.hasOwnProperty('password')) {
-                    username = data.username
+                    email = data.username
                     password = data.password
                 }
-
-                if (await fetchUser(username, password)) {
-                    userToken = 'khanh_dai_ca'
+                if (email.trim() !== '' && password.trim() !== '') {
+                    if (validateEmail(email)) {
+                        await fetchUser(email, password)
+                    } else {
+                        authDispatch(SignInFailed({isErr: true, msg: 'Email Not Valid!'}))
+                    }
                 } else {
-                    authDispatch(SignInFailed({isErr: true}))
+                    authDispatch(SignInFailed({isErr: true, msg: 'Email or password not empty!'}))
                     userToken = null
                 }
-
                 //restored token
-                authDispatch(SignIn({token: userToken, isErr: userToken == null}))
+                authDispatch(SignIn({token: userToken, isErr: userToken == null, msg: userToken == null ? 'Email or Password Incorrect!':''}))
             } catch (e) {
                 console.log(e)
             }
         },
-        signOut: () => {
+        signOut: async () => {
+            await LocalStorage.deleteItemAsync('api_token')
             authDispatch(SignOut())
         },
         signUp: async (data) => {
@@ -103,65 +117,63 @@ export const RootApp = () => {
     return (
         <AuthContext.Provider value={authContext}>
             <NavigationContainer>
-                <LayoutScreen authContext={AuthContext}>
-                    <Stack.Navigator>
-                        {
-                            authenticators.userToken == null
-                                ?
-                                (
-                                    <Stack.Screen name={'sign_in'} options={{
-                                        title: "",
-                                        headerShown: false,
-                                        headerBackButtonMenuEnabled: false
-                                    }}>
-                                        {(props) => <SignInScreen authContext={AuthContext}  {...props}/>}
-                                    </Stack.Screen>
-                                )
-                                :
+                <Stack.Navigator>
+                    {
+                        authenticators.userToken == null
+                            ?
+                            (
+                                <Stack.Screen name={'sign_in'} options={{
+                                    title: "",
+                                    headerShown: false,
+                                    headerBackButtonMenuEnabled: false
+                                }}>
+                                    {(props) => <SignInScreen authContext={AuthContext}  {...props}/>}
+                                </Stack.Screen>
+                            )
+                            :
+                            <Stack.Group>
+                                <Stack.Screen name={"home"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: false,
+                                    headerShown: false
+                                }}>
+                                    {(props) => <HomeScreen authContext={AuthContext}  {...props}/>}
+                                </Stack.Screen>
+                                <Stack.Screen name={"categories"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: false,
+                                    headerShown: false
+                                }} component={CategoriesScreen}>
+                                </Stack.Screen>
+                                <Stack.Screen name={"products"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: false,
+                                    headerShown: false
+                                }} component={ProductsScreen}>
+                                </Stack.Screen>
+                                <Stack.Screen name={"cart"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: false,
+                                    headerShown: false
+                                }} component={CartScreen}>
+                                </Stack.Screen>
+                                <Stack.Screen name={"profile"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: false,
+                                    headerShown: false
+                                }}>
+                                    {(props)=><ProfileScreen AuthContext={AuthContext}  {...props}></ProfileScreen>}
+                                </Stack.Screen>
+                                <Stack.Screen name={"product_detail"} options={{
+                                    title: "",
+                                    headerBackButtonMenuEnabled: true,
+                                    headerShown: true,
 
-                                <Stack.Group>
-                                    <Stack.Screen name={"home"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: false,
-                                        headerShown: false
-                                    }}>
-                                        {(props) => <HomeScreen authContext={AuthContext}  {...props}/>}
-                                    </Stack.Screen>
-                                    <Stack.Screen name={"categories"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: false,
-                                        headerShown: false
-                                    }} component={CategoriesScreen}>
-                                    </Stack.Screen>
-                                    <Stack.Screen name={"products"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: false,
-                                        headerShown: false
-                                    }} component={ProductsScreen}>
-                                    </Stack.Screen>
-                                    <Stack.Screen name={"cart"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: false,
-                                        headerShown: false
-                                    }} component={CartScreen}>
-                                    </Stack.Screen>
-                                    <Stack.Screen name={"profile"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: false,
-                                        headerShown: false
-                                    }} component={ProfileScreen}>
-                                    </Stack.Screen>
-                                    <Stack.Screen name={"product_detail"} options={{
-                                        title: "",
-                                        headerBackButtonMenuEnabled: true,
-                                        headerShown: true,
-
-                                    }} component={ProductDetail}>
-                                    </Stack.Screen>
-                                </Stack.Group>
-                        }
-                    </Stack.Navigator>
-                </LayoutScreen>
+                                }} component={ProductDetail}>
+                                </Stack.Screen>
+                            </Stack.Group>
+                    }
+                </Stack.Navigator>
             </NavigationContainer>
         </AuthContext.Provider>
     );
