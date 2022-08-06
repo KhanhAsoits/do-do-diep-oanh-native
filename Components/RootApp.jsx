@@ -2,17 +2,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {createContext, useEffect, useMemo} from "react";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {BeforeSignIn, RestoreToken, SignIn, SignInFailed, SignOut, SignUp} from "../features/authStore";
-import {NavigationContainer, useNavigation} from "@react-navigation/native";
+import {NavigationContainer} from "@react-navigation/native";
 import {SignInScreen} from "../Screens/SignInScreen";
 import {CategoriesScreen} from "../Screens/CategoriesScreen";
 import {ProductsScreen} from "../Screens/ProductsScreen";
 import {CartScreen} from "../Screens/CartScreen";
 import {ProfileScreen} from "../Screens/ProfileScreen";
 import {HomeScreen} from "../Screens/HomeScreen";
-import {LayoutScreen} from "../Screens/LayoutScreen";
 import {ProductDetail} from "../Screens/ProductDetail";
-import {TouchableOpacity} from "react-native";
-import {Ionicons} from "@expo/vector-icons";
 import {loginAPI} from "../API/AuthAPI";
 import {validateEmail} from "../helpers/email";
 import * as LocalStorage from 'expo-secure-store'
@@ -69,7 +66,6 @@ export const RootApp = () => {
                     try {
                         await wait()
                         let res = await loginAPI(email, password)
-                        console.log(res.toString())
                         if (res){
                             await restore_token(res.token)
                             userToken = res.token

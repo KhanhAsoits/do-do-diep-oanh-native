@@ -1,24 +1,19 @@
-import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, SafeAreaView, ScrollView, StyleSheet,Animated,Text, TouchableOpacity, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {useCallback} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {format} from "../Components/ProductItem";
 import {Products} from "../Components/Products";
-import categoryBg from "../assets/images/category-1.png";
-import product1 from "../assets/images/product.png";
 import {useFocusEffect} from "@react-navigation/native";
-import {ToggleHeader} from "../features/layoutStore";
 import { Ionicons } from '@expo/vector-icons';
-import {Touchable} from "react-native-web";
-import {Header} from "../Components/Header";
 import {Navbar} from "../Components/Navbar";
+import Spinner from "react-native-loading-spinner-overlay/src";
+import {wait} from "../helpers/delayClient";
+const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView)
 export const ProductDetail = ({navigation, route}) => {
-
-    const dispatch = useDispatch()
     const layoutReducer = useSelector(state => state.layoutReducer)
-
+    const [isLoading,setIsLoading] = useState(false)
     useFocusEffect(
         useCallback(() => {
-            dispatch(ToggleHeader({header: false}))
             navigation.setOptions({
                 headerRight: () => (
                     <TouchableOpacity onPress={() => {
@@ -39,157 +34,26 @@ export const ProductDetail = ({navigation, route}) => {
         }, [layoutReducer.header])
     )
 
-
-    const productOfCategories = [
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-        {
-            name: "Lư hương đồng tinh xảo chất lượng",
-            category: {
-                title: "Đồ thờ cúng",
-                image: categoryBg
-            },
-            price: 12888000,
-            rate: 4,
-            image: product1,
-            detail: "mMOp5iCJlUEVdmbB0D9WGRycvo4fG9zbO7YWQfnjS83dshXFvhiNECCcSO0RG2Qns3XnosWtWtWg3fuGDOazbVBn4G72NQirAIxo2IPqqeKebDIBGCFhtXgtujxxoZvPy7zSBvyvHzoPlvgXQY4BTNf5YgZ5JYdB6hYrv9qylKOJsnVaJgNylKlTwuzqsAJjLoaCSgCLgFw",
-            size: '256cm x 256cm x 256cm',
-            material: 'ĐỒNG NGUYÊN CHẤT MẠ VÀNG'
-        },
-    ]
-
+    const productReducer = useSelector((state)=>state.productReducer)
+    const productOfCategories = productReducer.data
     const product = route.params.product
+    useEffect(()=>{
+        const bootstrapAsync = async ()=>{
+            setIsLoading(true)
+            await wait(1000)
+            ref_.current.scrollTo({x:0,y:0,animated:true})
+            setIsLoading(false)
+        }
+        if (ref_.current){
+            bootstrapAsync()
+        }
+    },[product])
+    useEffect(()=>{},[isLoading])
+    const ref_ = useRef(null)
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.container}>
+            <AnimatedScrollView  style={styles.container} ref={ref_}>
+                {isLoading && <Spinner visible={true}></Spinner>}
                 <Image source={product.image} style={styles.productImage}/>
                 <View style={styles.detailContainer}>
                     <Text style={styles.productName}>{product.name}</Text>
@@ -213,7 +77,7 @@ export const ProductDetail = ({navigation, route}) => {
                     </View>
                 </View>
                 <Products title={"Sản Phẩm Cùng Loại"} products={productOfCategories}></Products>
-            </ScrollView>
+            </AnimatedScrollView>
             <Navbar></Navbar>
         </SafeAreaView>
     )

@@ -5,18 +5,16 @@ import {ToggleHeader} from "../features/layoutStore";
 import {Header} from "../Components/Header";
 import {Categories} from "../Components/Categories";
 import {Navbar} from "../Components/Navbar";
+import Spinner from "react-native-loading-spinner-overlay/src";
 
 export const CartScreen = () => {
     const dispatch = useDispatch()
-
-    useFocusEffect(() => {
-        dispatch(ToggleHeader({header: true}))
-    })
     return (
         <SafeAreaView style={{flex:1}}>
+
             <Header></Header>
             <ScrollView>
-                <View><Text>Cart Screen</Text></View>
+                <View><Text style={{fontSize:20,textAlign:"center"}}>Không có gì trong giỏ cả !</Text></View>
             </ScrollView>
             <Navbar></Navbar>
         </SafeAreaView>

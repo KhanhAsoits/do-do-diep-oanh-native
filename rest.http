@@ -1,7 +1,3 @@
-POST https://dodongdiepoanh.com/api/auth/login
+GET https://dodongdiepoanh.com/api/user/info
 Content-Type: application/json
-
-{
-  "email": "dangkhanh.dev@gmail.com",
-  "password": "13122002k@"
-}
+#Authorization: Bearer 12|p320nNNd5aXcmM3fyi55MhItbZUgpFSmiihP3ZTX

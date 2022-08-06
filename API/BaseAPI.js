@@ -1,7 +1,13 @@
 import * as LocalStorage from 'expo-secure-store'
+import {getItemAsync} from "expo-secure-store";
 
 export const BASE_URI = 'https://dodongdiepoanh.com/api'
-
+export const config = async ()=>{
+    let local_token = await getItemAsync('api_token')
+    return {
+        headers: { Authorization: `Bearer ${local_token}` }
+    }
+}
 export const restore_token = async (token) => {
     try {
         if (token) {

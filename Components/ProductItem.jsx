@@ -27,7 +27,7 @@ const GenRate = ({rate}) => {
 }
 
 const screenWith = Dimensions.get('window').width
-export const ProductItem = ({product}) => {
+export const ProductItem = ({product,scrollRef}) => {
     return (
         <Link to={{screen: 'product_detail', params: {product: product}}} style={{margin:6}}>
             <View style={styles.productBox}>

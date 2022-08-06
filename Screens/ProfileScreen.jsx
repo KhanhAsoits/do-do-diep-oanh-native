@@ -2,7 +2,6 @@ import {
     Image,
     ImageBackground,
     SafeAreaView,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -24,9 +23,6 @@ export const ProfileScreen = ({route, navigation,AuthContext}) => {
     const dispatch = useDispatch()
     const {signOut} = useContext(AuthContext)
     const userReducer = useSelector((state) => state.userReducer)
-    useFocusEffect(() => {
-        dispatch(ToggleHeader({header: true}))
-    })
     return (
         <SafeAreaView style={{flex:1}}>
             <ImageBackground source={bg} style={styles.container}>

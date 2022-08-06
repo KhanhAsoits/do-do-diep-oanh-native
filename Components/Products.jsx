@@ -1,13 +1,16 @@
 import {StyleSheet, Text, View} from "react-native";
 import {ProductItem} from "./ProductItem";
+import {useEffect, useState} from "react";
 
 export const Products = ({products, title}) => {
+
     return (
+
         <View style={styles.popularProduct}>
             <Text style={[styles.title, {color: "white"}]}>{title}</Text>
             <View style={styles.productsContainer}>
                 {products.map((val, index) => {
-                    return <ProductItem key={index} product={val}></ProductItem>
+                    return <ProductItem  key={index} product={val}></ProductItem>
                 })}
             </View>
         </View>

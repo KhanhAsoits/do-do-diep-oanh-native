@@ -1,126 +1,40 @@
-import {Image, SafeAreaView, ScrollView, View} from 'react-native'
-import categoryBg from "../assets/images/category-1.png";
-import categoryBg2 from "../assets/images/category-2.png";
-import categoryBg3 from "../assets/images/category-3.png";
-import categoryBg4 from "../assets/images/category-4.png";
+import {Image, ImageBackground, SafeAreaView, ScrollView, View} from 'react-native'
 import {Categories} from "../Components/Categories";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
-import {useFocusEffect} from "@react-navigation/native";
-import {ToggleHeader} from "../features/layoutStore";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {Header} from "../Components/Header";
-import banner from "../assets/images/header-banner.png";
-import {Products} from "../Components/Products";
 import {Navbar} from "../Components/Navbar";
-
+import {useMutation, useQuery} from '@tanstack/react-query'
+import {fetchAllCategories} from "../API/CategoriesAPI";
+import Spinner from "react-native-loading-spinner-overlay/src";
+import {RestoreCategories} from "../features/categoriesStore";
+import categoryEmbed from "../assets/images/categoriesEmbed.png";
 export const CategoriesScreen = () => {
-    const initCategories = [
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-        {
-            title: "Đồ thờ cúng",
-            image: categoryBg
-        },
-        {
-            title: "Đồ Mạ Vàng",
-            image: categoryBg2
-        },
-        {
-            title: "Đồ Đồng Văn",
-            image: categoryBg3
-        },
-        {
-            title: "Đồ đá sứ",
-            image: categoryBg4
-        },
-    ]
-    const [categories, setCategories] = useState(initCategories)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const [isLoading,setIsLoading] = useState(false)
+    const categoriesReducer = useSelector((state)=>state.categoriesReducer)
+    const query = useMutation(fetchAllCategories,{retry:3,retryDelay:1,onSuccess:(res)=>{dispatch(RestoreCategories({categories:res,type:"RESTORE_CATEGORIES"}))}})
+    useEffect(()=>{
 
+    },[query.isLoading])
 
+    useEffect(()=>{
+        const asyncBootstrap = async ()=>{
+            query.mutate()
+        }
+        if (!categoriesReducer.data){
+            asyncBootstrap()
+        }
+    },[categoriesReducer.data])
     return (
         <SafeAreaView style={{flex:1}}>
             <Header></Header>
-            <ScrollView>
-                <Categories categories={categories}></Categories>
+            <ScrollView contentContainerStyle={{flexGrow:1}}>
+                <Spinner visible={query.isLoading}></Spinner>
+                <ImageBackground style={{flex:1}} source={categoryEmbed} >
+                    <Spinner visible={isLoading}></Spinner>
+                    {categoriesReducer.data && <Categories categories={categoriesReducer.data} title={'Tất Cả Danh Mục'}></Categories>}
+                </ImageBackground>
             </ScrollView>
             <Navbar></Navbar>
         </SafeAreaView>
